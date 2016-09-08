@@ -2,17 +2,16 @@
 
 namespace Wame\Geolocate\Components;
 
-use Doctrine\Common\Collections\Criteria;
+use Nette\DI\Container;
 use Wame\ChameleonComponents\Definition\DataDefinition;
 use Wame\ChameleonComponents\Definition\DataDefinitionTarget;
 use Wame\ChameleonComponents\IO\DataLoaderControl;
 use Wame\Core\Components\BaseControl;
-use Wame\SearchModule\Forms\SearchForm;
-use Wame\SearchModule\Repositories\ISearchRepository;
-use Nette\DI\Container;
+use Wame\Geolocate\Forms\GeolocateForm;
 
 interface IGeolocateFilterControlFactory
 {
+
     /**
      * @return GeolocateFilterControl
      */
@@ -21,27 +20,26 @@ interface IGeolocateFilterControlFactory
 
 class GeolocateFilterControl extends BaseControl implements DataLoaderControl
 {
+
     /** @persistent */
-    public $query;
-    
-    /** @var SearchForm */
-    private $nearbyForm;
+    public $address;
 
-    /** @var ISearchRepository */
-    private $searchRepository;
+    /** @persistent */
+    public $distance;
 
-    
-    public function __construct(Container $container, SearchForm $searchForm, ISearchRepository $searchRepository)
+    /** @var GeolocateForm */
+    private $geolocateForm;
+
+    public function __construct(Container $container, GeolocateForm $geolocateForm)
     {
         parent::__construct($container);
-        
-        $this->searchForm = $searchForm;
-        $this->searchRepository = $searchRepository;
+
+        $this->geolocateForm = $geolocateForm;
     }
 
-    public function createComponentSearchForm()
+    public function createComponentGeolocateForm()
     {
-        $form = $this->searchForm->build();
+        $form = $this->geolocateForm->build();
         return $form;
     }
 
@@ -52,15 +50,29 @@ class GeolocateFilterControl extends BaseControl implements DataLoaderControl
 
     public function getDataDefinition()
     {
-        $query = $this->query;
-        if ($query) {
-            $ids = $this->searchRepository->searchIds(['query' => $query, 'size' => 100], $type);
-
-            $criteria = Criteria::create(Criteria::expr()->in('id', $ids));
-
-            $dataDefinition = new DataDefinition(new DataDefinitionTarget("*", true), $criteria);
-
-            return $dataDefinition;
+        if ($this->address && $this->distance) {
+            //TODO
+            return new DataDefinition(new DataDefinitionTarget("*", true));
         }
+    }
+
+    function getAddress()
+    {
+        return $this->address;
+    }
+
+    function getDistance()
+    {
+        return $this->distance;
+    }
+
+    function setAddress($address)
+    {
+        $this->address = $address;
+    }
+
+    function setDistance($distance)
+    {
+        $this->distance = $distance;
     }
 }

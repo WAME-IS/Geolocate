@@ -4,6 +4,9 @@ services:
     - Wame\Geolocate\Forms\IAddressFormContainerFactory
     - Wame\Geolocate\Forms\INearbyContainerFactory
 
+    # Factories
+    - Wame\Geolocate\Components\IGeolocateFilterControlFactory
+
     # Forms
     GeolocateForm:
         class: Wame\Geolocate\Forms\GeolocateForm
