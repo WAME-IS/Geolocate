@@ -4,7 +4,7 @@ namespace Wame\Geolocate\Forms;
 
 use Wame\DynamicObject\Forms\BaseFormBuilder;
 
-class GeolocateForm extends BaseFormBuilder
+class GeolocateFormBuilder extends BaseFormBuilder
 {
     /** {@inheritDoc} */
     public function submit($form, $values)

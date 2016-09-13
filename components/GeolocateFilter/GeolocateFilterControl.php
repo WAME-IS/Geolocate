@@ -7,47 +7,41 @@ use Wame\ChameleonComponents\Definition\DataDefinition;
 use Wame\ChameleonComponents\Definition\DataDefinitionTarget;
 use Wame\ChameleonComponents\IO\DataLoaderControl;
 use Wame\Core\Components\BaseControl;
-use Wame\Geolocate\Forms\GeolocateForm;
+use Wame\Geolocate\Forms\GeolocateFormBuilder;
 
 interface IGeolocateFilterControlFactory
 {
-
-    /**
-     * @return GeolocateFilterControl
-     */
+    /** @return GeolocateFilterControl */
     public function create();
 }
 
 class GeolocateFilterControl extends BaseControl implements DataLoaderControl
 {
-
     /** @persistent */
     public $address;
 
     /** @persistent */
     public $distance;
 
-    /** @var GeolocateForm */
-    private $geolocateForm;
+    /** @var GeolocateFormBuilder */
+    private $geolocateFormBuilder;
 
-    public function __construct(Container $container, GeolocateForm $geolocateForm)
+    
+    public function __construct(Container $container, GeolocateFormBuilder $geolocateFormBuilder)
     {
         parent::__construct($container);
 
-        $this->geolocateForm = $geolocateForm;
+        $this->geolocateFormBuilder = $geolocateFormBuilder;
     }
-
-    public function createComponentGeolocateForm()
-    {
-        $form = $this->geolocateForm->build();
-        return $form;
-    }
-
+    
+    
+    /** {@inheritDoc} */
     public function render()
     {
         
     }
 
+    /** {@inheritDoc} */
     public function getDataDefinition()
     {
         if ($this->address && $this->distance) {
@@ -56,23 +50,57 @@ class GeolocateFilterControl extends BaseControl implements DataLoaderControl
         }
     }
 
+    /**
+     * Get address
+     * 
+     * @return string
+     */
     function getAddress()
     {
         return $this->address;
     }
 
+    /**
+     * Get distance
+     * 
+     * @return string
+     */
     function getDistance()
     {
         return $this->distance;
     }
 
+    /**
+     * Set address
+     * 
+     * @param string $address   address
+     * @return \Wame\Geolocate\Components\GeolocateFilterControl
+     */
     function setAddress($address)
     {
         $this->address = $address;
+        
+        return $this;
     }
 
+    /**
+     * Set distance
+     * 
+     * @param string $distance  distance
+     * @return \Wame\Geolocate\Components\GeolocateFilterControl
+     */
     function setDistance($distance)
     {
         $this->distance = $distance;
+        
+        return $this;
     }
+    
+    
+    protected function createComponentGeolocateForm()
+    {
+        $form = $this->geolocateFormBuilder->build();
+        return $form;
+    }
+    
 }

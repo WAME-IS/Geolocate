@@ -1,18 +1,18 @@
 services:
 
     # Containers
-    - Wame\Geolocate\Forms\IAddressFormContainerFactory
-    - Wame\Geolocate\Forms\INearbyContainerFactory
+    - Wame\Geolocate\Forms\Containers\IAddressContainerFactory
+    - Wame\Geolocate\Forms\Containers\INearbyContainerFactory
 
     # Factories
     - Wame\Geolocate\Components\IGeolocateFilterControlFactory
 
     # Forms
-    GeolocateForm:
-        class: Wame\Geolocate\Forms\GeolocateForm
+    GeolocateFormBuilder:
+        class: Wame\Geolocate\Forms\GeolocateFormBuilder
         setup:
-            - add(@Wame\Geolocate\Forms\IAddressFormContainerFactory)
-            - add(@Wame\Geolocate\Forms\INearbyContainerFactory)
+            - add(@Wame\Geolocate\Forms\Containers\IAddressContainerFactory, "AddressContainer", {priority: 90})
+            - add(@Wame\Geolocate\Forms\Containers\INearbyContainerFactory, "NearbyContainer", {priority: 80})
 
 extensions:
     geolocateAutocompleteFormControl: Wame\Geolocate\DI\GeolocateAutocompleteFormExtension
