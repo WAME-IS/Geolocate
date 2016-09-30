@@ -19,11 +19,11 @@ class AddressContainer extends BaseContainer
         
         $this->addText('address', ('City'))
                 ->setAttribute('autocomplete', 'off')
-                ->setAttribute('class', 'form-control')
+                ->setAttribute('class', 'form-control autocomplete')
                 ->setAttribute('data-type', '(cities)')
+                ->setAttribute('data-autocomplete', 'geolocate');
                 // TODO: vykomentovane pretoze pri vyhladavani nechceme ukladat
-//                ->setAttribute('data-url', '/location/city?do=createCityFromGoogleMapApi')
-                ->setAttribute('class', 'form-control');
+//                ->setAttribute('data-url', '/location/city?do=createCityFromGoogleMapApi');
         
         // TODO: stary sposob cez extension (pri znovupouzitelnych containeroch nema zmysel extension)
 //		$this->addGeolocateAutocomplete('address', _('City'))
