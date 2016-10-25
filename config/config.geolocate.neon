@@ -21,14 +21,17 @@ extensions:
 webloader:
     js:
         admin:
-#            remoteFiles:
+            remoteFiles:
+                - //www.google.com/jsapi
 #                - 'https://maps.googleapis.com/maps/api/js?key=%geolocateAutocompleteFormControl.googleMapsApiKey%&amp;libraries=places&amp;callback=initGoogleMapiApiAutocomplete'
             files:
-                - %appDir%/../vendor/wame/Geolocate/assets/googleMapApiAutocomplete.js
+                - %appDir%/../vendor/wame/Geolocate/assets/autocomplete-geolocate.js
 
         default:
-#            remoteFiles:
+            remoteFiles:
+                - //www.google.com/jsapi
 #                - %appDir%/../vendor/wame/Geolocate/assets/js.js
 #                - 'https://maps.googleapis.com/maps/api/js?key=%geolocateAutocompleteFormControl.googleMapsApiKey%&amp;libraries=places&amp;callback=initGoogleMapiApiAutocomplete'
+
             files:
-                - %appDir%/../vendor/wame/Geolocate/assets/googleMapApiAutocomplete.js
+                - %appDir%/../vendor/wame/Geolocate/assets/autocomplete-geolocate.js
