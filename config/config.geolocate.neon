@@ -15,6 +15,7 @@ services:
         setup:
             - add(@Wame\Geolocate\Forms\Containers\ICityFilterContainerFactory, "CityFilterContainer", {priority: 90})
             - add(@Wame\Geolocate\Forms\Containers\INearbyContainerFactory, "NearbyContainer", {priority: 80})
+            - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, "SubmitContainer", {priority: 0})
 
 
 # TODO: este je tato extension potrebna?

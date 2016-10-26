@@ -1,6 +1,0 @@
-services:
-    - Wame\Geolocate\Vendor\Wame\ChameleonComponentsDoctrine\Loader\GeolocateRelationLoader
-
-    RelationsRegister:
-        setup:
-            - @Wame\Geolocate\Vendor\Wame\ChameleonComponentsDoctrine\Loader\GeolocateRelationLoader::initialize(@RelationsRegister)
