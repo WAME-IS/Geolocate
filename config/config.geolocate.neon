@@ -1,19 +1,23 @@
 services:
-
     # Containers
     - Wame\Geolocate\Forms\Containers\IAddressContainerFactory
     - Wame\Geolocate\Forms\Containers\INearbyContainerFactory
+    - Wame\Geolocate\Forms\Containers\ICityFilterContainerFactory
+
 
     # Factories
     - Wame\Geolocate\Components\IGeolocateFilterControlFactory
+
 
     # Forms
     GeolocateFormBuilder:
         class: Wame\Geolocate\Forms\GeolocateFormBuilder
         setup:
-            - add(@Wame\Geolocate\Forms\Containers\IAddressContainerFactory, "AddressContainer", {priority: 90})
+            - add(@Wame\Geolocate\Forms\Containers\ICityFilterContainerFactory, "CityFilterContainer", {priority: 90})
             - add(@Wame\Geolocate\Forms\Containers\INearbyContainerFactory, "NearbyContainer", {priority: 80})
 
+
+# TODO: este je tato extension potrebna?
 extensions:
     geolocateAutocompleteFormControl: Wame\Geolocate\DI\GeolocateAutocompleteFormExtension
 
@@ -26,12 +30,13 @@ webloader:
 #                - 'https://maps.googleapis.com/maps/api/js?key=%geolocateAutocompleteFormControl.googleMapsApiKey%&amp;libraries=places&amp;callback=initGoogleMapiApiAutocomplete'
             files:
                 - %appDir%/../vendor/wame/Geolocate/assets/autocomplete-geolocate.js
+                - %appDir%/../vendor/wame/Geolocate/assets/main.js
 
         default:
             remoteFiles:
                 - //www.google.com/jsapi
-#                - %appDir%/../vendor/wame/Geolocate/assets/js.js
 #                - 'https://maps.googleapis.com/maps/api/js?key=%geolocateAutocompleteFormControl.googleMapsApiKey%&amp;libraries=places&amp;callback=initGoogleMapiApiAutocomplete'
 
             files:
                 - %appDir%/../vendor/wame/Geolocate/assets/autocomplete-geolocate.js
+                - %appDir%/../vendor/wame/Geolocate/assets/main.js
