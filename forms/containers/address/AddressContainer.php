@@ -83,13 +83,15 @@ class AddressContainer extends BaseContainer
                 ->setAttribute('data-el-postal_code', $container . "[zipCode]")
                 ->setAttribute('data-el-latitude', $container . "[latitude]")
                 ->setAttribute('data-el-longitude', $container . "[longitude]")
-                ->setAttribute('data-el-placeId', $container . "[importId]")
+                ->setAttribute('data-el-place_id', $container . "[importId]")
                 ->setAttribute('data-el-administrative_area_level_1', $container . "[region]");
     }
     
     /** {@inheritDoc} */
     public function postUpdate($form, $values)
     {
+        $lang = 'sk';
+        
         $state = $this->stateRepository->get(['code' => $values['state']]);
         
         $region = $values['region'] ? (new RegionEntity)
@@ -100,19 +102,49 @@ class AddressContainer extends BaseContainer
         $city = (new CityEntity)
                 ->setRegion($region)
                 ->setState($state)
+                ->setImportId($values['importId'])
                 ->setZipCode($values['zipCode'])
                 ->setLatitude($values['latitude'])
                 ->setLongitude($values['longitude'])
-                ->addLang('sk', (new CityLangEntity)->setTitle($values['city']));
+                ->addLang($lang, (new CityLangEntity)->setLang($lang)->setTitle($values['city']));
         
         $address = $this->addressRepository->create(
             (new AddressEntity)
+                ->setTitle($values['address'])
+                ->setState($state)
                 ->setStreet($values['street'])
                 ->setHouseNumber($values['houseNumber'])
                 ->setCity($city)
         );
         
         $form->getEntity()->setAddress($address);
+    }
+    
+    /** {@inheritDoc} */
+    public function setDefaultValues($entity, $langEntity = null)
+    {
+        $address = $entity->getAddress();
+        
+        if($address) {
+            $this['address']->setDefaultValue($address->getTitle());
+            $this['street']->setDefaultValue($address->getStreet());
+            $this['houseNumber']->setDefaultValue($address->getHouseNumber());
+            
+            $state = $address->getState();
+            if($state) {
+                $this['state']->setDefaultValue($state->getCode());
+            }
+
+            $city = $address->getCity();
+            if($city) {
+                $this['city']->setDefaultValue($city->getTitle());
+                $this['zipCode']->setDefaultValue($city->getZipCode());
+                $this['latitude']->setDefaultValue($city->getLatitude());
+                $this['longitude']->setDefaultValue($city->getLongitude());
+                $this['importId']->setDefaultValue($city->getImportId());
+//                $this['region']->setDefaultValue($city->getRegion()->getTitle());
+            }
+        }
     }
 
 }

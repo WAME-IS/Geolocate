@@ -26,6 +26,7 @@ $.fn.geoAutocomplete = function(options) {
      */
     function saveToData(name, value) {
         if(name) {
+            console.log('ukladam ' + name);
             $el = $("[name='" + name + "']");
             if($el.length) {
                 $el.val(value);
@@ -68,7 +69,7 @@ $.fn.geoAutocomplete = function(options) {
             address['latitude'] = place.geometry.location.lat();
             address['longitude'] = place.geometry.location.lng();
 
-            saveToData($this.data('el-placeId'), address['place_id']);
+            saveToData($this.data('el-place_id'), address['place_id']);
             saveToData($this.data('el-latitude'), address['latitude']);
             saveToData($this.data('el-longitude'), address['longitude']);
 
