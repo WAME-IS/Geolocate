@@ -19,6 +19,9 @@ interface IGeolocateFilterControlFactory
 
 class GeolocateFilterControl extends BaseControl implements DataLoaderControl
 {
+    /** @var string @persistent */
+    public $city;
+    
     /** @var float @persistent */
     public $latitude;
     
@@ -55,7 +58,7 @@ class GeolocateFilterControl extends BaseControl implements DataLoaderControl
             $this->getPresenter()->getStatus()->set("radius", $this->getRadius());
         
             $criteria = Criteria::create();
-            $criteria->andWhere($criteria->expr()->eq("id", 1));
+            $criteria->andWhere($criteria->expr()->neq("status", 0)); // TODO: nutna where clauzula, inak chyba v chameleone
             
             $dataDefinition = new DataDefinition(new DataDefinitionTarget("*", true));
             $dataDefinition->addRelation(new DataDefinitionTarget(CityEntity::class, false), $criteria);
@@ -64,6 +67,16 @@ class GeolocateFilterControl extends BaseControl implements DataLoaderControl
         }
     }
 
+    /**
+     * Get city
+     * 
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+    
     /**
      * Get latitude
      * 
@@ -94,6 +107,19 @@ class GeolocateFilterControl extends BaseControl implements DataLoaderControl
         return $this->radius;
     }
 
+    /**
+     * Set city
+     * 
+     * @param string $city  city
+     * @return \Wame\Geolocate\Components\GeolocateFilterControl
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+        
+        return $this;
+    }
+    
     /**
      * Set latitude
      * 
@@ -140,7 +166,10 @@ class GeolocateFilterControl extends BaseControl implements DataLoaderControl
     {
         $form = $this->geolocateFormBuilder->build();
         
-        if($this->getRadius()) {
+        if($this->getCity() && $this->getLatitude() && $this->getLongitude() && $this->getRadius()) {
+            $form['CityFilterContainer']['city']->setValue($this->getCity());
+            $form['CityFilterContainer']['latitude']->setValue($this->getLatitude());
+            $form['CityFilterContainer']['longitude']->setValue($this->getLongitude());
             $form['NearbyContainer']['nearby']->setValue($this->getRadius());
         }
         

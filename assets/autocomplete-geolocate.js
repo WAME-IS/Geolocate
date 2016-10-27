@@ -2,6 +2,8 @@
  * https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
  */
 
+// TODO: doplnit PSC - lukas
+
 $.fn.geoAutocomplete = function(options) {
     var settings = $.extend({
         componentForm: {

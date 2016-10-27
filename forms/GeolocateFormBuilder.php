@@ -12,6 +12,7 @@ class GeolocateFormBuilder extends BaseFormBuilder
     public function submit(BaseForm $form, array $values)
     {
 		$geolocateFilterControl = $form->lookup(GeolocateFilterControl::class);
+        $geolocateFilterControl->setCity($values['CityFilterContainer']['city']);
         $geolocateFilterControl->setLatitude($values['CityFilterContainer']['latitude']);
         $geolocateFilterControl->setLongitude($values['CityFilterContainer']['longitude']);
         $geolocateFilterControl->setRadius($values['NearbyContainer']['nearby']);
