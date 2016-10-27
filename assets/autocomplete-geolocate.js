@@ -5,6 +5,7 @@
 // TODO: doplnit PSC - lukas
 
 $.fn.geoAutocomplete = function(options) {
+    /** @type {Object} */
     var settings = $.extend({
         componentForm: {
             street_number: 'long_name',
@@ -54,6 +55,8 @@ $.fn.geoAutocomplete = function(options) {
                     var val = value[settings.componentForm[addressType]];
 
                     address[addressType] = val;
+                    
+                    saveToData($this.data('el-' + addressType), val);
 
 //                        if (addressType === 'country') {
 //                            country = place.address_components[i]['long_name'];

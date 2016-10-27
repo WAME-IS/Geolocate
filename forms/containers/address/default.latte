@@ -1,5 +1,14 @@
-{var $address = $_form['AddressContainer']['address']}
+{var $container = $_form['AddressContainer']}
+{var $address = $container['address']}
 <div class="form-group">
 	{label $address/}
 	<input n:name="$address">
 </div>
+{input $container['street']}
+{input $container['houseNumber']}
+{input $container['city']}
+{input $container['state']}
+{input $container['zipCode']}
+{input $container['latitude']}
+{input $container['longitude']}
+{input $container['importId']}
