@@ -5,7 +5,7 @@ namespace App\AdminModule\Presenters;
 use Wame\Core\Presenters\Traits\UseParentTemplates;
 
 
-class GeolocateFilterControlPresenter extends AbastractComponentPresenter
+class GeolocateFilterControlPresenter extends AbstractComponentPresenter
 {	
     use UseParentTemplates;
     
