@@ -117,7 +117,7 @@ class AddressContainer extends BaseContainer
                 ->setCity($city)
         );
         
-        $form->getEntity()->setAddress($address);
+        $this->getRelationEntity($form)->setAddress($address);
     }
     
     /** {@inheritDoc} */
@@ -145,6 +145,16 @@ class AddressContainer extends BaseContainer
 //                $this['region']->setDefaultValue($city->getRegion()->getTitle());
             }
         }
+    }
+    
+    /**
+     * Get relation entity
+     * 
+     * @return BaseEntity
+     */
+    protected function getRelationEntity()
+    {
+        return $this->getForm()->getEntity();
     }
 
 }
