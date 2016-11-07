@@ -90,14 +90,13 @@ class AddressContainer extends BaseContainer
     /** {@inheritDoc} */
     public function postUpdate($form, $values)
     {
-        $lang = 'sk';
+        $lang = $this->addressRepository->lang;
         
         $state = $this->stateRepository->get(['code' => $values['state']]);
         
         $region = $values['region'] ? (new RegionEntity)
-                ->setState($state)
-                ->setLang('sk')
-                ->setTitle($values['region']) : null;
+                ->addLang($lang, (new RegionLangEntity)->setLang($lang)->setTitle($values['region']))
+                ->setState($state) : null;
         
         $city = (new CityEntity)
                 ->setRegion($region)
