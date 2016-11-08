@@ -122,7 +122,7 @@ class AddressContainer extends BaseContainer
     /** {@inheritDoc} */
     public function setDefaultValues($entity, $langEntity = null)
     {
-        $address = $entity->getAddress();
+        $address = $entity->getCompany()->getAddress();
         
         if($address) {
             $this['address']->setDefaultValue($address->getTitle());
