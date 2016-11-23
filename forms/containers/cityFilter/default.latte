@@ -1,10 +1,10 @@
-{var $city = $_form['CityFilterContainer']['city']}
+{var $city = $container['city']}
 <div class="form-group">
 	{label $city/}
 	<input n:name="$city">
 </div>
 
-{var $latitude = $_form['CityFilterContainer']['latitude']}
-{var $longitude = $_form['CityFilterContainer']['longitude']}
+{var $latitude = $container['latitude']}
+{var $longitude = $container['longitude']}
 {input $latitude}
 {input $longitude}
