@@ -25,42 +25,43 @@ class AddressContainer extends BaseContainer
 {
     /** @var AddressRepository */
     protected $addressRepository;
-    
+
     /** @var CityRepository */
     protected $cityRepository;
-    
+
     /** @var RegionRepository */
     protected $regionRepository;
-    
+
     /** @var StateRepository */
     protected $stateRepository;
-    
+
     /** @var ContinentRepository */
     protected $continentRepository;
-    
-    
+
+
     public function __construct(
+        \Nette\DI\Container $container,
         AddressRepository $addressRepository,
         CityRepository $cityRepository,
         RegionRepository $regionRepository,
         StateRepository $stateRepository,
         ContinentRepository $continentRepository
     ) {
-        parent::__construct();
-        
+        parent::__construct($container);
+
         $this->addressRepository = $addressRepository;
         $this->cityRepository = $cityRepository;
         $this->regionRepository = $regionRepository;
         $this->stateRepository = $stateRepository;
         $this->continentRepository = $continentRepository;
     }
-    
-    
+
+
     /** {@inheritDoc} */
-    public function configure() 
+    public function configure()
 	{
         $container = 'AddressContainer';
-        
+
         $this->addHidden('street');
         $this->addHidden('houseNumber');
         $this->addHidden('city');
@@ -70,7 +71,7 @@ class AddressContainer extends BaseContainer
         $this->addHidden('longitude');
         $this->addHidden('importId');
         $this->addHidden('region');
-        
+
         $this->addText('address', ('Address'))
                 ->setAttribute('autocomplete', 'off')
                 ->setAttribute('class', 'form-control autocomplete')
@@ -86,18 +87,18 @@ class AddressContainer extends BaseContainer
                 ->setAttribute('data-el-place_id', $container . "[importId]")
                 ->setAttribute('data-el-administrative_area_level_1', $container . "[region]");
     }
-    
+
     /** {@inheritDoc} */
     public function postUpdate($form, $values)
     {
         $lang = $this->addressRepository->lang;
-        
+
         $state = $this->stateRepository->get(['code' => $values['state']]);
-        
+
         $region = $values['region'] ? (new RegionEntity)
                 ->addLang($lang, (new RegionLangEntity)->setLang($lang)->setTitle($values['region']))
                 ->setState($state) : null;
-        
+
         $city = (new CityEntity)
                 ->setRegion($region)
                 ->setState($state)
@@ -106,7 +107,7 @@ class AddressContainer extends BaseContainer
                 ->setLatitude($values['latitude'])
                 ->setLongitude($values['longitude'])
                 ->addLang($lang, (new CityLangEntity)->setLang($lang)->setTitle($values['city']));
-        
+
         $address = $this->addressRepository->create(
             (new AddressEntity)
                 ->setTitle($values['address'])
@@ -115,20 +116,20 @@ class AddressContainer extends BaseContainer
                 ->setHouseNumber($values['houseNumber'])
                 ->setCity($city)
         );
-        
+
         $this->getRelationEntity($form)->setAddress($address);
     }
-    
+
     /** {@inheritDoc} */
     public function setDefaultValues($entity, $langEntity = null)
     {
         $address = $entity->getCompany()->getAddress();
-        
+
         if($address) {
             $this['address']->setDefaultValue($address->getTitle());
             $this['street']->setDefaultValue($address->getStreet());
             $this['houseNumber']->setDefaultValue($address->getHouseNumber());
-            
+
             $state = $address->getState();
             if($state) {
                 $this['state']->setDefaultValue($state->getCode());
@@ -145,10 +146,10 @@ class AddressContainer extends BaseContainer
             }
         }
     }
-    
+
     /**
      * Get relation entity
-     * 
+     *
      * @return BaseEntity
      */
     protected function getRelationEntity()
