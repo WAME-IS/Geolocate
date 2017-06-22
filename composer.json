@@ -16,7 +16,7 @@
     "config": { "secure-http": false },
     "require": {
         "wame/Core": ">=0.0.1",
-        "wame/LocationModule": "0.0.*"
+        "wame/LocationModule": ">=0.0.1"
     },
     "autoload": {
         "classmap": [
