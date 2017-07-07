@@ -17,6 +17,11 @@ services:
             - add(@Wame\Geolocate\Forms\Containers\INearbyContainerFactory, "NearbyContainer", {priority: 80})
             - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, "SubmitContainer", {priority: 0})
 
+    UserSignUpFormBuilder:
+        setup:
+            - add(@Wame\DynamicObject\Forms\Groups\IEmptyGroupFactory, 'LocationGroup', {priority: 40})
+            - add(@Wame\Geolocate\Forms\Containers\IAddressContainerFactory, 'AddressContainer', {priority: 39})
+
 
 # TODO: este je tato extension potrebna?
 extensions:
