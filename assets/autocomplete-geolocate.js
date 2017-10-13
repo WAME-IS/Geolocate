@@ -1,9 +1,6 @@
 /**
  * https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
  */
-
-// TODO: doplnit PSC - lukas
-
 $.fn.geoAutocomplete = function(options) {
     /** @type {Object} */
     var settings = $.extend({
@@ -13,10 +10,12 @@ $.fn.geoAutocomplete = function(options) {
             locality: 'long_name',
             sublocality_level_1: 'long_name',
             administrative_area_level_1: 'long_name',
+            administrative_area_level_2: 'long_name',
             country: 'short_name',
             postal_code: 'long_name'
         }
     }, options);
+
     
     /**
      * Save to data
@@ -25,15 +24,16 @@ $.fn.geoAutocomplete = function(options) {
      * @param {mixed} value
      */
     function saveToData(name, value) {
-        if(name) {
-            console.log('ukladam ' + name);
+        if (name) {
             $el = $("[name='" + name + "']");
-            if($el.length) {
+
+            if ($el.length) {
                 $el.val(value);
             }
         }
     }
-    
+
+
     return this.each(function() {
         var $this = $(this);
         
@@ -58,58 +58,48 @@ $.fn.geoAutocomplete = function(options) {
                     address[addressType] = val;
                     
                     saveToData($this.data('el-' + addressType), val);
-
-//                        if (addressType === 'country') {
-//                            country = place.address_components[i]['long_name'];
-//                        }
                 }
             });
 
             address['place_id'] = place.place_id;
             address['latitude'] = place.geometry.location.lat();
             address['longitude'] = place.geometry.location.lng();
+            address['formatted_address'] = place.formatted_address;
 
             saveToData($this.data('el-place_id'), address['place_id']);
             saveToData($this.data('el-latitude'), address['latitude']);
             saveToData($this.data('el-longitude'), address['longitude']);
 
             // save address to db
-            if($this.data('url')) {
-                saveObject(url, address);
+            if ($this.data('url')) {
+                saveObject($this, url, address);
             }
-            
-//                var label = address.locality;
-
-//                if (address.sublocality_level_1) {
-//                    label += ' - ' + address.sublocality_level_1;
-//                }
-//
-//                if (country) {
-//                    label += ', ' + country;
-//                }
-
-//                input.hide();
-//                input.after('<div class="well well-sm">' + label + '<span class="fa fa-spinner fa-pulse btn btn-sm btn-link pull-right loader"></span></div>');
         }
+
 
         // TODO: need to implement geolocation (navigator.geolocation)
         function geolocate() {
             if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(function(position) {
-                var geolocation = {
-                  lat: position.coords.latitude,
-                  lng: position.coords.longitude
-                };
-                var circle = new google.maps.Circle({
-                  center: geolocation,
-                  radius: position.coords.accuracy
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var geolocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    var circle = new google.maps.Circle({
+                        center: geolocation,
+                        radius: position.coords.accuracy
+                    });
+
+                    autocomplete.setBounds(circle.getBounds());
                 });
-                autocomplete.setBounds(circle.getBounds());
-              });
             }
         }
 
-        function saveObject(url, address) {
+
+        function saveObject(input, url, address) {
+            createDiv(input);
+
             $.nette.ajax({
                 url: url,
                 type: 'POST',
@@ -117,30 +107,64 @@ $.fn.geoAutocomplete = function(options) {
                     address : address
                 },
                 cache: false,
-                error: function(jqXHR, status, error, settings){
-//                        input.before('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error when Ajax request</div>');
-//                        googleMapsApiInputEmpty();
-                },
-                success: function(payload, status, jqXHR, settings){
-                    console.log(payload.addressId);
-
-//                        input.closest('.google-map-api-autocomplete').find('.well').find('.loader').remove();
-//                        input.closest('.google-map-api-autocomplete').find('.well').append('<a href="#" class="btn btn-sm btn-link pull-right google-map-api-autocomplete-close"><span class="fa fa-times-circle"></span></a>');
-//                        $('#' + input.data('input')).val(response.addressId);
+                success: function(payload, status, jqXHR, settings) {
+                    selectValue(input, payload);
                 }
             });
         }
 
-//        function googleMapsApiInputEmpty() {
-//            $('#google-map-api-autocomplete').val('').show();
-//            $('#' + $('#google-map-api-autocomplete').data('input')).val('');
-//            $('.google-map-api-autocomplete .well').remove();
-//        }
 
-//            $('.google-map-api-autocomplete').delegate('.google-map-api-autocomplete-close', 'click', function() {
-//                googleMapsApiInputEmpty();
-//
-//                return false;
-//            });
+        function createDiv(input)
+        {
+            var wrapper = input.closest('.google-map-api-autocomplete');
+
+            input.hide();
+            wrapper.append('<div class="well well-sm"><span class="google-map-api-autocomplete-title">' + input.val() + '</span><span class="fa fa-refresh fa-spin btn btn-link pull-right loader"></span></div>');
+        }
+
+
+        function selectValue(input, data)
+        {
+            input.val(data.id);
+
+            var wrapper = input.closest('.google-map-api-autocomplete');
+
+            wrapper.find('.google-map-api-autocomplete-title').text(data.title);
+            wrapper.find('.loader').remove();
+            $('<a href="#" class="btn btn-sm btn-link pull-right google-map-api-autocomplete-close"><span class="fa fa-times-circle"></span></a>').appendTo(wrapper.find('.well'));
+        }
+
+
+        function googleMapsApiInputEmpty(input) {
+           input.val('').show();
+
+           input.closest('.google-map-api-autocomplete').find('.well').remove();
+        }
+
+
+        $('.google-map-api-autocomplete').delegate('.google-map-api-autocomplete-close', 'click', function() {
+           googleMapsApiInputEmpty($(this).closest('.google-map-api-autocomplete').find('input'));
+
+           return false;
+        });
+
+
+        function setValueOnLoad() {
+            if ($this.data('id')) {
+                var data = {};
+
+                data.id = $this.data('id');
+                data.title = $this.val();
+
+                createDiv($this);
+                selectValue($this, data);
+
+                $this.removeAttr('data-id');
+            }
+        }
+
+        setValueOnLoad();
+
    });
+
 };
