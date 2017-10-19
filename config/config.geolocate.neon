@@ -1,12 +1,13 @@
 services:
-    # Containers
+    # Components
+    - Wame\Geolocate\Components\IGeolocateFilterControlFactory
+
+
+    # Form containers
     - Wame\Geolocate\Forms\Containers\IAddressContainerFactory
     - Wame\Geolocate\Forms\Containers\INearbyContainerFactory
     - Wame\Geolocate\Forms\Containers\ICityFilterContainerFactory
-
-
-    # Factories
-    - Wame\Geolocate\Components\IGeolocateFilterControlFactory
+    - Wame\Geolocate\Forms\Containers\ICityContainerFactory
 
 
     # Forms
@@ -21,6 +22,10 @@ services:
         setup:
             - add(@Wame\DynamicObject\Forms\Groups\IEmptyGroupFactory, 'LocationGroup', {priority: 40})
             - add(@Wame\Geolocate\Forms\Containers\IAddressContainerFactory, 'AddressContainer', {priority: 39})
+
+    AddressFormBuilder:
+        setup:
+            - add(@Wame\Geolocate\Forms\Containers\ICityContainerFactory, 'CityContainer', [priority: 70])
 
 
 # TODO: este je tato extension potrebna?

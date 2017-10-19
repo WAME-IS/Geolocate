@@ -34,6 +34,9 @@ $.fn.geoAutocomplete = function(options) {
     }
 
 
+    /**
+     * Each Geo autocomplete inputs
+     */
     return this.each(function() {
         var $this = $(this);
         
@@ -97,8 +100,17 @@ $.fn.geoAutocomplete = function(options) {
         }
 
 
+        /**
+         * Send to API
+         *
+         * @param input
+         * @param url
+         * @param address
+         */
         function saveObject(input, url, address) {
             createDiv(input);
+
+            input.closest('form').find('[type="submit"]').addClass('disabled');
 
             $.nette.ajax({
                 url: url,
@@ -109,11 +121,26 @@ $.fn.geoAutocomplete = function(options) {
                 cache: false,
                 success: function(payload, status, jqXHR, settings) {
                     selectValue(input, payload);
+                },
+                error: function(error) {
+                    if (error.responseJSON.error) {
+                        googleMapsApiWarning(input, error);
+                    }
+
+                    googleMapsApiInputEmpty(input);
+                },
+                complete: function() {
+                    input.closest('form').find('[type="submit"]').removeClass('disabled');
                 }
             });
         }
 
 
+        /**
+         * Create DIV with loader
+         *
+         * @param input
+         */
         function createDiv(input)
         {
             var wrapper = input.closest('.google-map-api-autocomplete');
@@ -123,6 +150,12 @@ $.fn.geoAutocomplete = function(options) {
         }
 
 
+        /**
+         * Select value to input
+         *
+         * @param input
+         * @param data
+         */
         function selectValue(input, data)
         {
             input.val(data.id);
@@ -135,6 +168,11 @@ $.fn.geoAutocomplete = function(options) {
         }
 
 
+        /**
+         * Empty input and DIV
+         *
+         * @param input
+         */
         function googleMapsApiInputEmpty(input) {
            input.val('').show();
 
@@ -142,6 +180,24 @@ $.fn.geoAutocomplete = function(options) {
         }
 
 
+        /**
+         * Create warning
+         *
+         * @param input
+         * @param error
+         */
+        function googleMapsApiWarning(input, error)
+        {
+            var wrapper = input.closest('.google-map-api-autocomplete');
+
+            wrapper.addClass('has-error');
+            $('#' + input.attr('data-lfv-message-id')).addClass('help-block text-danger').text(error.responseJSON.error).show();
+        }
+
+
+        /**
+         * Remove button click
+         */
         $('.google-map-api-autocomplete').delegate('.google-map-api-autocomplete-close', 'click', function() {
            googleMapsApiInputEmpty($(this).closest('.google-map-api-autocomplete').find('input'));
 
@@ -149,6 +205,9 @@ $.fn.geoAutocomplete = function(options) {
         });
 
 
+        /**
+         * Set value on load
+         */
         function setValueOnLoad() {
             if ($this.data('id')) {
                 var data = {};
