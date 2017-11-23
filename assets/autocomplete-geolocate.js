@@ -146,7 +146,7 @@ $.fn.geoAutocomplete = function(options) {
             var wrapper = input.closest('.google-map-api-autocomplete');
 
             input.hide();
-            wrapper.append('<div class="well well-sm"><span class="gmaa-title">' + input.val() + '</span><span class="fa fa-refresh fa-spin btn btn-link pull-right gmaa-loader"></span></div>');
+            wrapper.append('<div class="well well-sm"><span class="gmaa-title">' + input.val() + '</span><span class="fa fa-refresh fa-spin btn-link pull-right gmaa-loader"></span></div>');
         }
 
 
@@ -164,7 +164,7 @@ $.fn.geoAutocomplete = function(options) {
 
             wrapper.find('.gmaa-title').text(data.title);
             wrapper.find('.gmaa-loader').remove();
-            $('<a href="#" class="btn btn-sm btn-link pull-right google-map-api-autocomplete-close"><span class="fa fa-times-circle"></span></a>').appendTo(wrapper.find('.well'));
+            $('<a href="#" class="btn-sm btn-link pull-right google-map-api-autocomplete-close"><span class="fa fa-times-circle"></span></a>').appendTo(wrapper.find('.well'));
         }
 
 
