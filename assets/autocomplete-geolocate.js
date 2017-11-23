@@ -164,7 +164,7 @@ $.fn.geoAutocomplete = function(options) {
 
             wrapper.find('.gmaa-title').text(data.title);
             wrapper.find('.gmaa-loader').remove();
-            $('<a href="#" class="btn-sm btn-link pull-right google-map-api-autocomplete-close"><span class="fa fa-times-circle"></span></a>').appendTo(wrapper.find('.well'));
+            $('<a href="#" class="btn-sm btn-link pull-right gmaa-close"><span class="fa fa-times-circle"></span></a>').appendTo(wrapper.find('.well'));
         }
 
 
@@ -198,8 +198,11 @@ $.fn.geoAutocomplete = function(options) {
         /**
          * Remove button click
          */
-        $('.google-map-api-autocomplete').delegate('.google-map-api-autocomplete-close', 'click', function() {
-           googleMapsApiInputEmpty($(this).closest('.google-map-api-autocomplete').find('input'));
+        $('.google-map-api-autocomplete').delegate('.gmaa-close', 'click', function() {
+            var input = $(this).closest('.google-map-api-autocomplete').find('input');
+            
+            googleMapsApiInputEmpty(input);
+            input.trigger( 'focus' ).trigger( 'input' );
 
            return false;
         });
