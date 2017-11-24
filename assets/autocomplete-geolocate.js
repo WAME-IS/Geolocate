@@ -45,6 +45,12 @@ $.fn.geoAutocomplete = function(options) {
         var autocomplete = new google.maps.places.Autocomplete($this[0], {types: [type]});
         
         autocomplete.addListener('place_changed', changePlace);
+        
+        init($this);
+        
+        function init (elm) {
+            elm.addClass( 'gma-plugin-initialized' );
+        }
 
         function changePlace() {
             var url = $this.data('url');
@@ -202,7 +208,7 @@ $.fn.geoAutocomplete = function(options) {
             var input = $(this).closest('.google-map-api-autocomplete').find('input');
             
             googleMapsApiInputEmpty(input);
-            input.trigger( 'focus' ).trigger( 'input' );
+            input.trigger( 'input' ).trigger( 'focus' );
 
            return false;
         });
