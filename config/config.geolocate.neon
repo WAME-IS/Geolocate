@@ -34,6 +34,15 @@ extensions:
 
 
 webloader:
+    css:
+        default: 
+            files:
+                - %appDir%/../vendor/wame/Geolocate/assets/geolocate.css
+
+        admin: 
+            files:
+                - %appDir%/../vendor/wame/Geolocate/assets/geolocate.css
+    
     js:
         admin:
             remoteFiles:
